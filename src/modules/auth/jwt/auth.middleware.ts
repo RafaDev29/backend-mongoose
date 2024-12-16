@@ -8,40 +8,39 @@ interface JwtPayload {
   role: string;
 }
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  const authHeader = req.headers.authorization;
+export const authMiddleware = (requiredRole?: string) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({
-      status: false,
-      message: "Authentication token is missing or invalid",
-    });
-    return;
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    // Verificar y decodificar el token
-    const decoded = jwt.verify(token, jwtConstants.secret) as JwtPayload;
-
-    // Agregar datos decodificados al objeto de solicitud
-    (req as any).user = decoded;
-
-    // Verificar si el rol es SUPER_MASTER
-    if (decoded.role !== "SUPER_MASTER") {
-      res.status(403).json({
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({
         status: false,
-        message: "Forbidden: You do not have the necessary permissions",
+        message: "Authentication token is missing or invalid",
       });
       return;
     }
 
-    next();
-  } catch (error) {
-    res.status(401).json({
-      status: false,
-      message: "Invalid or expired token",
-    });
-  }
+    const token = authHeader.split(" ")[1];
+
+    try {
+      const decoded = jwt.verify(token, jwtConstants.secret) as JwtPayload;
+
+      req.user = decoded; // Ahora `req.user` está correctamente tipado
+
+      if (requiredRole && decoded.role !== requiredRole) {
+        res.status(403).json({
+          status: false,
+          message: `Forbidden: You must have the ${requiredRole} role to access this resource`,
+        });
+        return;
+      }
+
+      next();
+    } catch (error) {
+      res.status(401).json({
+        status: false,
+        message: "Invalid or expired token",
+      });
+    }
+  };
 };

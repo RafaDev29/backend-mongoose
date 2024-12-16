@@ -1,13 +1,14 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "CommonJS",
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": true,
-      "esModuleInterop": true
-    },
-    "include": ["src", "src/app.ts"],
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"], // Incluye el directorio de tipos personalizados
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"], // Asegúrate de incluir todos los archivos en `src`
+  "exclude": ["node_modules"]
+}

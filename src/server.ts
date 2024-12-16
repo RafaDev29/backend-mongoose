@@ -1,5 +1,6 @@
 import app from "./app";
 import connectDB from "./config/db";
+import "./types/express/index"; // Ajusta la ruta según la estructura de tu proyecto
 
 const PORT = process.env.PORT ;
 
