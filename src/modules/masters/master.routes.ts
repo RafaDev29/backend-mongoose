@@ -7,4 +7,6 @@ const masterController = new MasterController();
 
 router.post("/", authMiddleware, masterController.createMaster);
 router.get("/", authMiddleware, masterController.getAllMasters);
+router.delete("/:id", authMiddleware, masterController.deleteMaster);
+router.put("/:id", authMiddleware, masterController.updateMaster);
 export default router;

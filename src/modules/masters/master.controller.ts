@@ -60,4 +60,42 @@ export class MasterController {
       });
     }
   };
+
+  deleteMaster = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      await masterService.deleteMaster(id);
+
+      res.status(200).json({
+        status: true,
+        message: "Master deleted successfully",
+      });
+    } catch (err) {
+      res.status(404).json({
+        status: false,
+        message: err,
+      });
+    }
+  };
+
+  updateMaster = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const updates = req.body;
+
+      const updatedMaster = await masterService.updateMaster(id, updates);
+
+      res.status(200).json({
+        status: true,
+        message: "Master updated successfully",
+        data: updatedMaster,
+      });
+    } catch (err) {
+      res.status(404).json({
+        status: false,
+        message: err,
+      });
+    }
+  };
 }
